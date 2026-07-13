@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+*.pyc
+*.db
+videobrief.env
+.env
+.env.*
+!.env.example

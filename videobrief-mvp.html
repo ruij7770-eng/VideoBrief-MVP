@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>VideoBrief — 视频转知识页</title>
+<style>
+  :root { --ink:#162025; --muted:#657177; --paper:#f7f6f1; --card:#fffefa; --line:#dedfd7; --accent:#e65d36; --accent-dark:#bd4324; --soft:#fbe7dc; --nav:#142224; --success:#246a51; }
+  *{box-sizing:border-box} body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.55} button,input,textarea{font:inherit} button{cursor:pointer;border:0} 
+  .app{max-width:1440px;margin:auto;padding:22px 30px 52px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}.brand{font-size:20px;font-weight:800;letter-spacing:-.5px}.brand span{color:var(--accent)}.tag{font-size:12px;letter-spacing:.08em;color:#d8e0dd;background:var(--nav);border-radius:99px;padding:6px 10px}.hero{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;margin-bottom:22px}.intro,.input-card,.content{background:var(--card);border:1px solid var(--line);border-radius:16px}.intro{padding:38px 38px 32px;background:var(--nav);color:#f6f6ee}.eyebrow{color:#f4a580;font-size:13px;letter-spacing:.1em;font-weight:700}.intro h1{font-family:Georgia,"Noto Serif SC",serif;font-size:clamp(32px,5vw,58px);letter-spacing:-.04em;line-height:1.02;margin:13px 0 18px}.intro p{max-width:580px;margin:0;color:#d8dfdb;font-size:16px}.input-card{padding:22px}.input-card h2{font-size:17px;margin:0 0 6px}.hint{margin:0 0 15px;color:var(--muted);font-size:13px}.field{display:grid;gap:7px;margin:13px 0}.field label{font-size:13px;font-weight:700}.field input,.field textarea{width:100%;background:#fbfaf5;border:1px solid #d9dbd2;border-radius:9px;padding:10px 12px;color:var(--ink)}.field textarea{min-height:104px;resize:vertical}.actions{display:flex;gap:10px;align-items:center;margin-top:15px}.primary{background:var(--accent);color:white;padding:11px 15px;border-radius:9px;font-weight:800}.primary:hover{background:var(--accent-dark)}.secondary{background:transparent;color:var(--ink);padding:10px 8px;font-weight:700;text-decoration:underline;text-underline-offset:3px}.status{font-size:12px;color:var(--success);min-height:18px}.content{display:none;overflow:hidden}.content.show{display:block}.reading-head{padding:30px 34px 23px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:20px}.reading-head h2{font-family:Georgia,"Noto Serif SC",serif;font-size:31px;letter-spacing:-.03em;line-height:1.15;margin:7px 0}.reading-head p{color:var(--muted);margin:0;max-width:760px}.mode{height:max-content;white-space:nowrap;border:1px solid var(--line);background:var(--paper);padding:8px 10px;border-radius:8px;font-size:13px}.reading-grid{display:grid;grid-template-columns:245px minmax(0,1fr);min-height:570px}.toc{border-right:1px solid var(--line);padding:22px 14px;position:sticky;top:0;height:max-content}.toc-title{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:800;padding:0 10px 8px}.toc button{display:block;width:100%;text-align:left;background:transparent;padding:9px 10px;border-radius:7px;color:#4a565b;font-size:14px}.toc button:hover,.toc button.active{background:var(--soft);color:#8e351e;font-weight:700}.article{padding:31px 42px 44px;max-width:960px}.quick{border-bottom:1px solid var(--line);padding-bottom:26px}.section-kicker{font-size:12px;font-weight:800;color:var(--accent);letter-spacing:.1em}.big-summary{font-family:Georgia,"Noto Serif SC",serif;font-size:25px;line-height:1.35;margin:9px 0 18px;max-width:760px}.points{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.point{border:1px solid var(--line);padding:13px;border-radius:9px;background:#fcfbf6;font-size:14px}.chapters{padding-top:28px}.chapter{scroll-margin-top:20px;padding:24px 0;border-bottom:1px solid var(--line)}.chapter:last-child{border:0}.chapter-meta{font-size:12px;font-weight:800;color:var(--accent);letter-spacing:.08em}.chapter h3{font-family:Georgia,"Noto Serif SC",serif;font-size:25px;margin:5px 0 9px;letter-spacing:-.02em}.chapter p{margin:0 0 12px;color:#344045}.chapter ul{padding-left:20px;margin:10px 0}.chapter li{margin:5px 0}.timestamp{font-size:12px;padding:5px 8px;border-radius:5px;background:var(--soft);color:#9b3a21;font-weight:800}.action-box{background:#e6f0ea;border:1px solid #c7d9cc;border-radius:10px;padding:17px 19px;margin-top:22px}.action-box h3{margin:0 0 8px;font-size:15px}.action-item{display:flex;gap:8px;margin:7px 0;font-size:14px}.action-item input{accent-color:var(--success)}.source{margin-top:18px;font-size:12px;color:var(--muted);word-break:break-all}.empty{padding:54px 30px;text-align:center;color:var(--muted)}
+  @media(max-width:800px){.app{padding:16px}.hero{grid-template-columns:1fr}.intro{padding:28px}.reading-head{padding:23px;display:block}.mode{margin-top:15px}.reading-grid{grid-template-columns:1fr}.toc{position:relative;border-right:0;border-bottom:1px solid var(--line);padding:12px;display:flex;overflow:auto}.toc-title{display:none}.toc button{white-space:nowrap;width:auto}.article{padding:25px 22px}.points{grid-template-columns:1fr}.top{margin-bottom:16px}}
+</style>
+</head>
+<body>
+<main class="app">
+  <header class="top"><div class="brand">Video<span>Brief</span></div><div class="tag">MVP · VIDEO → KNOWLEDGE PAGE</div></header>
+  <section class="hero">
+    <div class="intro"><div class="eyebrow">把线性视频，变成可扫读的知识</div><h1>不用从头看完，仍然理解视频。</h1><p>输入视频链接和字幕，生成一个可阅读、可搜索、按章节跳转的知识页。这个 MVP 先验证“结构化理解”是否比视频播放更快。</p></div>
+    <form class="input-card" id="briefForm">
+      <h2>生成一个 VideoBrief</h2><p class="hint">MVP 形态：粘贴公开视频链接和字幕/转写文本。生产版将自动抓取字幕或调用语音转写。</p>
+      <div class="field"><label for="url">视频链接（可选）</label><input id="url" type="url" placeholder="https://www.youtube.com/watch?v=..." /></div>
+      <div class="field"><label for="transcript">字幕 / 转写文本</label><textarea id="transcript" placeholder="粘贴带时间戳或普通转写文本…"></textarea></div>
+      <div class="actions"><button class="primary" type="submit">生成知识页</button><button class="secondary" type="button" id="demo">载入示例</button></div><div class="status" id="status"></div>
+    </form>
+  </section>
+  <section class="content" id="output" aria-live="polite">
+    <header class="reading-head"><div><div class="eyebrow">VIDEO KNOWLEDGE PAGE</div><h2 id="pageTitle">视频知识页</h2><p id="pageSubtitle"></p></div><button class="mode" id="exportBtn">复制为 Markdown</button></header>
+    <div class="reading-grid"><nav class="toc" id="toc"><div class="toc-title">内容目录</div></nav><article class="article" id="article"></article></div>
+  </section>
+  <section class="content show" id="empty"><div class="empty">载入示例或粘贴字幕，体验视频如何变成可快速理解的页面。</div></section>
+</main>
+<script>
+const demoText = `[00:00] 今天我们用一个实际案例，讲如何在 20 分钟内搭建一个个人知识库。目标不是收集更多信息，而是让信息在需要时可以被找到和使用。
+[01:12] 第一部分是建立收集入口。任何灵感、网页和会议笔记都先放进 Inbox，不要在收集时分类。收集和整理是两件不同的事。
+[03:28] 接下来定义最少的数据库字段：标题、来源、状态和主题。字段太多会降低录入意愿，先让系统容易使用。
+[06:40] 第二部分是处理流程。每天用十分钟清空 Inbox：删除无价值内容、把可行动的内容转成任务、把值得保留的内容写成自己的理解。
+[10:15] 模板能减少每次开始时的阻力。阅读笔记模板只保留三个问题：核心观点是什么？它和我已知的什么有关？我下一步会怎么用？
+[14:30] 最后是回顾。每周回顾项目和笔记，检查有没有没有推进的任务。知识库不是仓库，它应该持续帮助你做决定。
+[18:05] 总结：先建立单一入口，用最少字段降低摩擦，用固定回顾让信息进入行动。`;
+const qs = s => document.querySelector(s);
+function parseTranscript(text){
+  const rows = text.trim().split(/\n+/).map((line,i)=>{ const m=line.match(/\[(\d{1,2}:\d{2}(?::\d{2})?)\]\s*(.*)/); return {time:m?m[1]:`${String(i*2).padStart(2,'0')}:00`, body:(m?m[2]:line).trim()}; }).filter(x=>x.body);
+  const titleMatch = text.match(/如何([^。！？!？\n]{2,30})/);
+  const title = titleMatch ? titleMatch[1].replace(/[。！，,].*$/,'').trim() : '视频知识页';
+  const chapters = rows.length <= 1 ? [{time:'00:00',title:'视频核心内容', body:text, points: extractPoints(text)}] : rows.map((r,i)=>({time:r.time,title:chapterTitle(r.body,i),body:r.body,points:extractPoints(r.body)}));
+  const conclusion = rows.length ? rows[rows.length-1].body.replace(/^总结[：:]/,'') : '从视频中提取关键结论。';
+  return {title,chapters,conclusion};
+}
+function chapterTitle(s,i){ const clean=s.replace(/^(?:第[一二三四五六七八九十]+部分(?:是)?|接下来|最后|今天|总结)[：:，,]?/,''); const marks=['问题与目标','核心方法','实施步骤','建立习惯','关键总结']; return (clean.length>8?clean.slice(0,22):marks[i]||'关键内容'); }
+function extractPoints(s){ const pieces=s.split(/[，。；：:]/).map(x=>x.trim()).filter(x=>x.length>5); return (pieces.length?pieces:[s]).slice(0,3); }
+function render(data,url){
+  qs('#pageTitle').textContent=data.title;
+  qs('#pageSubtitle').textContent='从原始转写中提炼的阅读路径。每一节保留时间锚点，让结论可回到视频验证。';
+  const toc=qs('#toc'); toc.innerHTML='<div class="toc-title">内容目录</div><button class="active" data-target="quick">快速理解</button>';
+  data.chapters.forEach((c,i)=>toc.insertAdjacentHTML('beforeend',`<button data-target="chapter-${i}">${c.time} · ${c.title}</button>`));
+  const three=data.chapters.slice(0,3).map(c=>`<div class="point">${c.points[0]||c.body}</div>`).join('');
+  const cards=data.chapters.map((c,i)=>`<section class="chapter" id="chapter-${i}"><div class="chapter-meta">${String(i+1).padStart(2,'0')} · <button class="timestamp" onclick="openVideo('${url||''}','${c.time}')">${c.time} 查看原片段</button></div><h3>${c.title}</h3><p>${c.body}</p><ul>${c.points.map(p=>`<li>${p}</li>`).join('')}</ul></section>`).join('');
+  qs('#article').innerHTML=`<section class="quick" id="quick"><div class="section-kicker">30 秒快速理解</div><div class="big-summary">${data.conclusion}</div><div class="points">${three}</div></section><section class="chapters"><div class="section-kicker">按章节阅读</div>${cards}</section><section class="action-box"><h3>转化为行动</h3>${data.chapters.slice(0,3).map(c=>`<label class="action-item"><input type="checkbox">将「${c.title}」转成自己的下一步</label>`).join('')}<div class="source">来源：${url||'用户粘贴的转写文本'}</div></section>`;
+  qs('#output').classList.add('show'); qs('#empty').style.display='none';
+  toc.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{toc.querySelectorAll('button').forEach(x=>x.classList.remove('active'));b.classList.add('active');qs('#'+b.dataset.target).scrollIntoView({behavior:'smooth',block:'start'});}));
+  window.currentData=data;
+}
+window.openVideo=(url,time)=>{ if(!url){alert('此 MVP 未填写视频链接。生产版将在此处跳转并定位到相应时间。');return;} const [m,s]=time.split(':').map(Number); const seconds=m*60+s; const u=new URL(url); if(u.hostname.includes('youtube.com')||u.hostname.includes('youtu.be')) { u.searchParams.set('t',seconds+'s'); } window.open(u.toString(),'_blank','noopener'); };
+qs('#briefForm').addEventListener('submit',e=>{e.preventDefault();const text=qs('#transcript').value.trim();if(!text){qs('#status').textContent='请先粘贴字幕或点击「载入示例」。';return;}qs('#status').textContent='已生成：结构化章节、快速理解和行动清单。';render(parseTranscript(text),qs('#url').value.trim());});
+qs('#demo').addEventListener('click',()=>{qs('#url').value='https://www.youtube.com/watch?v=dQw4w9WgXcQ';qs('#transcript').value=demoText;qs('#briefForm').requestSubmit();});
+qs('#exportBtn').addEventListener('click',async()=>{if(!window.currentData)return;const d=window.currentData;const md=`# ${d.title}\n\n## 一句话结论\n${d.conclusion}\n\n`+d.chapters.map(c=>`## ${c.time} ${c.title}\n${c.body}\n\n- ${c.points.join('\n- ')}`).join('\n\n');await navigator.clipboard.writeText(md);qs('#exportBtn').textContent='已复制';setTimeout(()=>qs('#exportBtn').textContent='复制为 Markdown',1400);});
+</script>
+</body>
+</html>
