@@ -6,7 +6,7 @@
 
 ## Overview
 
-This directory contains guidelines for backend development. Fill in each file with your project's specific conventions.
+This directory records the conventions currently enforced by the VideoBrief V4 modular monolith.
 
 ---
 
@@ -14,10 +14,10 @@ This directory contains guidelines for backend development. Fill in each file wi
 
 | Guide | Description | Status |
 |-------|-------------|--------|
-| [Directory Structure](./directory-structure.md) | Module organization and file layout | To fill |
-| [Database Guidelines](./database-guidelines.md) | ORM patterns, queries, migrations | To fill |
-| [Error Handling](./error-handling.md) | Error types, handling strategies | To fill |
-| [Quality Guidelines](./quality-guidelines.md) | Code standards, forbidden patterns | To fill |
+| [Directory Structure](./directory-structure.md) | Ports-and-Adapters boundaries and layout | Active |
+| [Database Guidelines](./database-guidelines.md) | SQLite repository and history projection | Active |
+| [Error Handling](./error-handling.md) | Domain errors and API envelopes | Active |
+| [Quality Guidelines](./quality-guidelines.md) | Required gates and forbidden patterns | Active |
 | [Logging Guidelines](./logging-guidelines.md) | Structured logging, log levels | To fill |
 
 ---

@@ -2,7 +2,7 @@ import os
 import unittest
 from unittest.mock import patch
 
-from videobrief_agent import agent_status, enhance_brief
+from videobrief_agent import _prompt, agent_status, enhance_brief
 
 
 ROWS = [
@@ -46,6 +46,12 @@ class AgentConfigurationTests(unittest.TestCase):
         self.assertEqual(result["agent"]["mode"], "fast")
         self.assertEqual(result["agent"]["reason"], "missing_api_key")
         self.assertEqual(result["title"], BASE["title"])
+
+    def test_prompt_demands_only_three_non_redundant_high_value_insights(self):
+        text = __import__("json").dumps(_prompt(ROWS, BASE), ensure_ascii=False)
+        self.assertIn("最多3条", text)
+        self.assertIn("删掉任一条都会影响用户对视频的正确理解", text)
+        self.assertIn("不得为了填满结构重复同一事实", text)
 
     def test_smart_mode_uses_second_pass_audit_before_merging(self):
         calls = []
@@ -226,7 +232,7 @@ class AgentConfigurationTests(unittest.TestCase):
         self.assertEqual(result["agent"]["validated_structure_items"], 2)
         self.assertEqual(result["agent"]["rejected_structure_items"], 2)
 
-    def test_agent_counts_only_the_insights_returned_to_the_page(self):
+    def test_agent_returns_only_three_high_value_insights_to_the_page(self):
         candidates = [
             {"title": f"观点{i}", "detail": "字段太多会增加录入阻力。", "evidence_ids": ["E0002"], "claim_type": "video_explicit"}
             for i in range(6)
@@ -243,8 +249,8 @@ class AgentConfigurationTests(unittest.TestCase):
         with patch.dict(os.environ, {"VIDEOBRIEF_LLM_API_KEY": "secret-test-key"}, clear=True):
             result = enhance_brief(ROWS, BASE.copy(), mode="smart", transport=fake_transport)
 
-        self.assertEqual(len(result["key_insights"]), 5)
-        self.assertEqual(result["agent"]["validated_insights"], 5)
+        self.assertEqual(len(result["key_insights"]), 3)
+        self.assertEqual(result["agent"]["validated_insights"], 3)
         self.assertEqual(result["agent"]["validated_candidates"], 6)
 
     def test_claim_with_any_unknown_evidence_id_is_discarded(self):

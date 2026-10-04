@@ -103,6 +103,8 @@ Marker:
 AD_HOC_REAL_DEEPSEEK_V4_PASS
 ```
 
+All ten records created by API, browser, responsive and DeepSeek verification were then removed by explicit UUID in one SQLite transaction. The database returned from 62 to the original 52 records, `PRAGMA integrity_check` remained `ok`, and no pre-existing row was selected by title or time range.
+
 ## Browser and responsive verification
 
 Desktop browser:

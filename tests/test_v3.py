@@ -44,6 +44,31 @@ class StructuredBriefV3Tests(unittest.TestCase):
         self.assertIn("opinion", roles)
         self.assertIn("uncertainty", roles)
 
+    def test_decision_brief_leads_with_three_evidence_backed_takeaways(self):
+        result = make_brief([
+            {"time": "00:00", "body": "今天演示如何建立个人知识库。"},
+            {"time": "01:00", "body": "第一步建立唯一收集入口。"},
+            {"time": "02:00", "body": "字段太多会增加录入阻力，只保留必要字段。"},
+            {"time": "03:00", "body": "第二部分是处理流程。每天处理收件箱，把内容放进项目或资料库。"},
+            {"time": "04:00", "body": "每周回顾没有推进的任务。"},
+            {"time": "05:00", "body": "总结：用单一入口、最少字段和固定回顾维持系统。"},
+        ])
+        decision = result["decision_brief"]
+        self.assertTrue(decision["question"])
+        self.assertIn("单一入口", decision["answer"])
+        self.assertLessEqual(len(decision["takeaways"]), 3)
+        self.assertGreaterEqual(len(decision["takeaways"]), 2)
+        self.assertEqual(
+            len({item["title"] for item in decision["takeaways"]}),
+            len(decision["takeaways"]),
+        )
+        self.assertTrue(all(item["evidence_ids"] for item in decision["takeaways"]))
+        self.assertNotIn(decision["answer"], [item["detail"] for item in decision["takeaways"]])
+        self.assertFalse(any("今天演示" in item["title"] for item in decision["takeaways"]))
+        self.assertNotIn("E0001", {evidence_id for item in decision["takeaways"] for evidence_id in item["evidence_ids"]})
+        self.assertNotIn("处理流程", [item["title"] for item in decision["takeaways"]])
+        self.assertIn(decision["watch_verdict"], {"直接阅读即可", "只需回看关键片段", "建议观看原视频"})
+
     def test_tutorial_produces_a_quick_understanding_fingerprint(self):
         result = make_brief([
             {"time": "00:00", "body": "今天演示如何安装工具。"},

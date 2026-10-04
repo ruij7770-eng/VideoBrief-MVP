@@ -1,8 +1,17 @@
 import tempfile
+import time
 import unittest
 import warnings
 from pathlib import Path
 
+from fastapi.testclient import TestClient
+
+from videobrief.api.app import create_app, _cleanup_stale_uploads
+from videobrief.api.dependencies import ApplicationContainer
+from videobrief.bootstrap import build_pipeline
+from videobrief.config import Settings
+from videobrief.infrastructure.jobs.memory import InMemoryJobRepository
+from videobrief.infrastructure.persistence.sqlite import SQLiteBriefRepository
 import videobrief_server
 from videobrief_server import analyse_payload
 
@@ -47,6 +56,44 @@ class ApiContractTests(unittest.TestCase):
                 self.assertEqual(payload["evidence"][0]["time"], "01:20")
             finally:
                 videobrief_server.DB_PATH = original_db
+
+
+class JobCapacityTests(unittest.TestCase):
+    def _container(self, upload_dir, jobs):
+        settings = Settings(upload_dir=upload_dir, db_path=upload_dir / "briefs.db")
+        return ApplicationContainer(
+            settings=settings,
+            briefs=SQLiteBriefRepository(settings.db_path),
+            jobs=jobs,
+            pipeline=build_pipeline(settings),
+        )
+
+    def test_rejects_new_jobs_when_capacity_is_reached(self):
+        with tempfile.TemporaryDirectory() as directory:
+            jobs = InMemoryJobRepository()
+            for _ in range(2):
+                jobs.create("busy")
+            container = self._container(Path(directory), jobs)
+            with TestClient(create_app(container)) as client:
+                response = client.post("/api/jobs", json={"transcript": "[00:00] test", "analysis_mode": "fast"})
+            self.assertEqual(response.status_code, 429)
+            self.assertEqual(response.json()["error"]["code"], "JOB_CAPACITY_REACHED")
+
+    def test_stale_uploads_are_removed_on_startup(self):
+        with tempfile.TemporaryDirectory() as directory:
+            upload_dir = Path(directory) / "uploads"
+            upload_dir.mkdir()
+            stale = upload_dir / "stale.mp4"
+            old = upload_dir / "recent.mp4"
+            stale.write_bytes(b"a")
+            old.write_bytes(b"b")
+            past = time.time() - 25 * 3600
+            import os
+            os.utime(stale, (past, past))
+            removed = _cleanup_stale_uploads(upload_dir)
+            self.assertEqual(removed, 1)
+            self.assertFalse(stale.exists())
+            self.assertTrue(old.exists())
 
 
 if __name__ == "__main__":

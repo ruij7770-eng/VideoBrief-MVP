@@ -6,3 +6,5 @@ videobrief.env
 .env
 .env.*
 !.env.example
+
+.codex/

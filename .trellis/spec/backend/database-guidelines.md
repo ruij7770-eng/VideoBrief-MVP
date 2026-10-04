@@ -1,51 +1,65 @@
 # Database Guidelines
 
-> Database patterns and conventions for this project.
+> SQLite persistence and history compatibility conventions for VideoBrief.
 
 ---
 
-## Overview
+## Storage Model
 
-<!--
-Document your project's database conventions here.
+VideoBrief uses SQLite through `SQLiteBriefRepository`. The `briefs` table retains the original six-column shape and stores the complete Brief JSON in `result_json`.
 
-Questions to answer:
-- What ORM/query library do you use?
-- How are migrations managed?
-- What are the naming conventions for tables/columns?
-- How do you handle transactions?
--->
+New JSON payloads contain `schema_version: 4`. The database table is not rebuilt merely to version JSON.
 
-(To be filled by the team)
+## Query Rules
 
----
+- SQL is allowed only in `videobrief/infrastructure/persistence/`.
+- Always name insert columns explicitly:
 
-## Query Patterns
+```sql
+INSERT INTO briefs (id, created_at, title, source, url, result_json)
+VALUES (?, ?, ?, ?, ?, ?)
+```
 
-<!-- How should queries be written? Batch operations? -->
+- Never use `INSERT INTO briefs VALUES (...)`; adding a column would break every writer.
+- Use one short-lived connection per repository operation.
+- Configure `busy_timeout=5000` and WAL mode for the local concurrent workload.
+- Parameterize every value. Never format user input into SQL.
 
-(To be filled by the team)
+## Historical JSON
 
----
+Observed history contains four generations: `legacy-no-store`, `evidence-store-v1`, `typed-v2`, and `decision-v3`.
 
-## Migrations
+Read flow:
 
-<!-- How to create and run migrations -->
+```text
+stored JSON -> detect generation -> deterministic read projection -> current API
+```
 
-(To be filled by the team)
+Rules:
 
----
+- Never pass raw legacy JSON directly to strict current Pydantic models.
+- Never overwrite a historical payload as a side effect of reading it.
+- Preserve existing Evidence IDs byte-for-byte.
+- For records without Evidence IDs, generate deterministic `L...` IDs only in the read projection.
+- Projection must be idempotent: normalizing the same payload twice returns equal results.
+- Ask/export/history endpoints consume the projected form; `get_raw()` remains available for audits.
 
-## Naming Conventions
+## Migration Safety
 
-<!-- Table names, column names, index names -->
+Before any future DDL or batch rewrite:
 
-(To be filled by the team)
+1. create a SQLite backup with the SQLite backup API;
+2. verify `PRAGMA integrity_check = ok`;
+3. run compatibility tests across every record;
+4. prove the migration is idempotent;
+5. document and test restore steps.
 
----
+Do not test migrations against the user's live `videobrief.db`; use a temporary database or backup snapshot.
 
 ## Common Mistakes
 
-<!-- Database-related mistakes your team has made -->
-
-(To be filled by the team)
+- Applying a strict new schema directly to legacy rows.
+- Regenerating modern `E0001...` IDs during reads.
+- Adding a table column before replacing positional inserts.
+- Opening one global SQLite connection across worker threads.
+- Treating a successful JSON decode as evidence that Evidence references are valid.

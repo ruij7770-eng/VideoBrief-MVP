@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VideoBrief — 快速理解视频</title>
+<link rel="stylesheet" href="/assets/css/app.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">Video<i>Brief</i></div>
+  <div class="top-actions"><button id="newBtn" class="btn">解析新视频</button><button id="exportBtn" class="btn" disabled>导出 HTML</button></div>
+</header>
+<section id="create" class="create">
+  <div class="create-box">
+    <h1>不必完整观看，也能准确理解</h1>
+    <p class="create-lead">先得到结论，再看真正重要的三点；只有依赖画面的内容才需要回到原视频。</p>
+    <form id="form" class="inputs">
+      <input id="url" type="url" placeholder="粘贴 Bilibili / YouTube 链接">
+      <textarea id="transcript" placeholder="或粘贴带时间戳的字幕"></textarea>
+      <button id="submit" class="btn primary">开始理解</button>
+    </form>
+    <div class="extras">
+      <input id="file" type="file" accept="video/*,audio/*">
+      <select id="model" title="语音识别质量"><option value="tiny">极速转写</option><option value="small">平衡转写</option><option value="medium">高质量转写</option></select>
+      <select id="language" title="Transcription language"><option value="zh">Chinese speech</option><option value="auto">Auto detect</option><option value="en">English speech</option><option value="ja">Japanese speech</option><option value="ko">Korean speech</option></select>
+      <select id="analysis" title="内容分析模式"><option value="auto">自动选择分析引擎</option><option value="fast">本地极速分析</option><option value="smart">DeepSeek 智能分析</option></select>
+      <span id="agentState" class="pill">正在检查智能分析…</span>
+      <button id="demo" class="btn" type="button">查看示例</button>
+    </div>
+    <div id="status" class="status"><div class="status-line"><span id="statusText"></span><b id="percent">0%</b></div><div class="track"><i id="progress"></i></div></div>
+  </div>
+</section>
+<section id="empty" class="empty"><h2>把一个视频，压缩成可以复述的结论</h2><p>核心答案 · 三条关键结论 · 观看建议 · 原始证据</p></section>
+<div id="shell" class="shell">
+  <aside class="left rail"><div class="rail-label">快速导航</div><nav id="nav"></nav><div class="history"><div class="rail-label">最近生成</div><div id="historyList"></div></div></aside>
+  <main id="main" class="main"></main>
+  <aside class="right"><div class="rail">
+    <section class="right-card"><h3>问这个视频</h3><p>只依据视频证据回答；没有提到就明确说明。</p><form id="askForm" class="ask-form"><input id="question" placeholder="例如：为什么要这样做？"><button class="btn primary">提问</button></form><div id="askAnswer" class="ask-answer"></div></section>
+    <section class="right-card"><h3>查找原始内容</h3><input id="search" class="search" placeholder="搜索章节或字幕证据"><div id="searchCount" class="search-count"></div></section>
+  </div></aside>
+</div>
+<script type="module" src="/assets/js/app.js"></script>
+</body>
+</html>
